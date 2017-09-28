@@ -34,7 +34,7 @@ JNIEXPORT void JNICALL Java_com_chenguang_ptam_PTAM_init( JNIEnv* env, jobject t
     env->GetJavaVM(&jvm);
     jvm->AttachCurrentThread(&env, NULL);
 
-    GUI.LoadFile("/storage/emulated/legacy/settings.cfg");
+    GUI.LoadFile("/sdcard/ChenGuang/PTAMAndroid/settings.cfg");
 
     jint* imsize = env->GetIntArrayElements(size, 0);
     new System(imsize);

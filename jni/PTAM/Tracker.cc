@@ -119,21 +119,21 @@ void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw)
     if(mbDraw)
     {
         //glDrawPixels(mCurrentKF.aLevels[0].im);
-        if(GV2.GetInt("Tracker.DrawFASTCorners",0, SILENT))
+        if(GV2.GetInt("Tracker.DrawFASTCorners",1, SILENT))
         {
-            glPointSize(5);
             GLfloat col[4*mCurrentKF.aLevels[0].vCorners.size()];
             GLfloat pts[2*mCurrentKF.aLevels[0].vCorners.size()];
             for(unsigned int i=0; i<mCurrentKF.aLevels[0].vCorners.size(); i++) {
-                col[4*i] = 1.0f;
+                col[4*i] = 0.0f;
                 col[4*i+1] = 1.0f;
-                col[4*i+2] = 1.0f;
+                col[4*i+2] = 0.0f;
                 col[4*i+3] = 1.0f;
                 pts[2*i] = mCurrentKF.aLevels[0].vCorners[i].x;
                 pts[2*i+1] = mCurrentKF.aLevels[0].vCorners[i].y;
             }
             glEnableClientState(GL_VERTEX_ARRAY);
             glEnableClientState(GL_COLOR_ARRAY);
+            glPointSize(3);
             glVertexPointer(2, GL_FLOAT, 0, pts);
             glColorPointer(4, GL_FLOAT, 0, col);
             glDrawArrays(GL_POINTS,0,mCurrentKF.aLevels[0].vCorners.size());

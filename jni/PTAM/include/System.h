@@ -18,6 +18,8 @@
 #include "Capture.h"
 //#include "VideoSource.h"
 
+#include <fstream>
+
 class ATANCamera;
 class Map;
 class MapMaker;
@@ -29,6 +31,7 @@ class System
 {
 public:
     System(int* size);
+    ~System();
 
     static System* get_instance();
     static System* _instance;
@@ -66,12 +69,15 @@ private:
 
     bool mbDone;
 
+    void draw_coord();
     void draw_center();
     void draw_rectangle();
     void draw_painted();
     void store_time();
 
     static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
+
+    std::ofstream PTAMSystemFile;
 };
 
 

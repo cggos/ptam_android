@@ -45,6 +45,7 @@ System::System(int* size)
     _capture = new Capture();
 
     started = false;
+    PTAMSystemFile.open("/sdcard/PTAMSystemFile.txt");
 }
 
 
@@ -104,6 +105,11 @@ void System::update()
     draw_center();
     draw_rectangle();
     draw_painted();
+
+    if(mpMap->IsGood())
+    {
+    	draw_coord();
+    }
 }
 
 
@@ -121,7 +127,7 @@ void System::draw_center()
 {
     glEnableClientState(GL_VERTEX_ARRAY);
     glPointSize(30);
-    glColor4f(1,1,1,1);
+    glColor4f(1,0,0,1);
     float v[] = {0,0};
     glVertexPointer(2, GL_FLOAT, 0, v);
     glDrawArrays(GL_POINTS, 0, 1);
@@ -196,7 +202,7 @@ void System::draw_rectangle()
     glMultMatrix(mpTracker->GetCurrentPose());
      
     std::vector<Vector<3> > rect = _capture->get_rectangle();
-    
+
     if (rect.size() > 0) {
         if (rect.size() < 3) {
             rect.push_back(mpTracker->GetCurrentPose().get_translation());
@@ -204,13 +210,16 @@ void System::draw_rectangle()
             rect.push_back(rect[0]);
         }
 
+        PTAMSystemFile << "draw_rectangle:" << std::endl;
         GLfloat* rectf = new float[rect.size()*3];
         for (size_t i = 0; i < rect.size(); ++i) {
             rectf[i*3] = -(GLfloat)rect[i][0];
             rectf[i*3+1] = (GLfloat)rect[i][1];
             rectf[i*3+2] = 0.f;
+
+            PTAMSystemFile << rect[i] << std::endl;
         }
-        
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glLineWidth(5);
         glColor4f(0,1,0,1);
@@ -220,8 +229,89 @@ void System::draw_rectangle()
 
         delete rectf;
     }
-    
+
+//    GLfloat* rectf = new float[4*3];
+//    rectf[0] = -0.233982;
+//    rectf[1] = 0.121883;
+//    rectf[2] = 0.0;
+//
+//    rectf[3] = 0.244326;
+//    rectf[4] = 0.110104;
+//    rectf[5] = 0.0;
+//
+//    rectf[6] = -0.0601744;
+//    rectf[7] = -0.269183;
+//    rectf[8] = 0.0;
+//
+//    rectf[9] = -0.538482;
+//    rectf[10] = -0.257404;
+//    rectf[11] = 0.0;
+
+//    glEnableClientState(GL_VERTEX_ARRAY);
+//    glLineWidth(5);
+//    glColor4f(0,1,0,1);
+//    glVertexPointer(3, GL_FLOAT, 0, rectf);
+//    glDrawArrays(GL_LINE_STRIP, 0, 4);
+//    glDisableClientState(GL_VERTEX_ARRAY);
+//
+//    delete[] rectf;
+
     glPopMatrix();
+}
+
+void System::draw_coord()
+{
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glMultMatrix(mpCamera->MakeUFBLinearFrustumMatrix(0.005, 100));
+	glMultMatrix(mpTracker->GetCurrentPose());
+
+	GLfloat* line = new float[3*2];
+
+	line[0] = 0.0;
+	line[1] = 0.0;
+	line[2] = 0.0;
+	line[3] = 1.0;
+	line[4] = 0.0;
+	line[5] = 0.0;
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glLineWidth(5);
+	glColor4f(1,0,0,1);
+	glVertexPointer(3, GL_FLOAT, 0, line);
+	glDrawArrays(GL_LINE_STRIP, 0, 2);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	line[0] = 0.0;
+	line[1] = 0.0;
+	line[2] = 0.0;
+	line[3] = 0.0;
+	line[4] = 1.0;
+	line[5] = 0.0;
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glLineWidth(5);
+	glColor4f(0,1,0,1);
+	glVertexPointer(3, GL_FLOAT, 0, line);
+	glDrawArrays(GL_LINE_STRIP, 0, 2);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	line[0] = 0.0;
+	line[1] = 0.0;
+	line[2] = 0.0;
+	line[3] = 0.0;
+	line[4] = 0.0;
+	line[5] = 1.0;
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glLineWidth(5);
+	glColor4f(0,0,1,1);
+	glVertexPointer(3, GL_FLOAT, 0, line);
+	glDrawArrays(GL_LINE_STRIP, 0, 2);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	delete[] line;
+
+	glPopMatrix();
 }
 
 
@@ -313,4 +403,9 @@ void System::GUICommandCallBack(void *ptr, string sCommand, string sParams)
         if (sParams == "t")
     		s->reset_positions();
     }
+}
+
+System::~System()
+{
+	PTAMSystemFile.close();
 }

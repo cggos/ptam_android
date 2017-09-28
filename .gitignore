@@ -6,6 +6,7 @@ gen/
 
 .classpath   
 .project 
+.settings/
 
 build.xml
 proguard-project.txt 
