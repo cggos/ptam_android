@@ -3,6 +3,7 @@ assets/
 bin/
 obj/
 gen/
+libs/
 
 .classpath   
 .project 
