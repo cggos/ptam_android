@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles 'consumer-rules.pro'
+        externalNativeBuild {
+
+            ndk {
+                // Specifies the ABI configurations of your native
+                // libraries Gradle should build and package with your APK.
+                abiFilters "armeabi-v7a","arm64-v8a"//, "armeabi-v7a"//, "x86", "x86_64"//, "armeabi"
+
+//            cFlags+=("-std=c++11")
+//            cFlags+=("-fexceptions")
+//            cFlags+=("-I${file("C:/Users/yakki/AndroidStudioProjects/OrbSlam2Test/app/src/main/jni/Thirdparty/OpenCV-android-sdk/sdk/native/jni/include")}".toString())
+//            cFlags+=("-I${file("C:/Users/yakki/AndroidStudioProjects/OrbSlam2Test/app/src/main/jni/Thirdparty/OpenCV-android-sdk/sdk/native/jni/include/opencv")}".toString())
+//            stl = "gnustl_shared"
+                stl = "c++_shared"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn 'copyJniLibs'
+//    }
+//    task copyJniLibs(type: Copy) {
+//        //"arm64-v8a", "armeabi-v7a"
+//        from fileTree(dir: file('build/intermediates/ndkBuild/debug/obj/local/arm64-v8a'), include: '*.so')
+//        into file('src/main/jniLibs/arm64-v8a')
+//        from fileTree(dir: file('build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a'), include: '*.so')
+//        into file('src/main/jniLibs/armeabi-v7a')
+//    }
+    externalNativeBuild {
+        ndkBuild {
+            path file('src/main/jni/Android.mk')
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+}
