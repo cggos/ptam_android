@@ -27,11 +27,13 @@
 #include <list>
 #include <vector>
 #include <iostream>
+#include <utility>
 
 #include <gvars3/config.h>
 #include <gvars3/default.h>
 #include <gvars3/type_name.h>
 #include <gvars3/serialize.h>
+
 
 namespace GVars3
 {
