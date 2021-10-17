@@ -9,6 +9,7 @@ import android.media.SoundPool;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.util.Log;
 
 /*
  * Manages the state of the application, calls PTAM to update its state.

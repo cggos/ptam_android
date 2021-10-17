@@ -10,6 +10,12 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.Manifest;
+import android.util.Log;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 public class PTAMActivity extends Activity {
 
@@ -17,10 +23,15 @@ public class PTAMActivity extends Activity {
 	private CaptureViewer _capture;
 	private PTAMActivity _self;
 
+	private static String[] PERMISSIONS_CAMERA = { Manifest.permission.CAMERA };
+	private static final int REQUEST_PERMISSION_CAMERA = 1;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_self = this;
+
+		CheckCameraPermission(this);
 
 		// hide system UI
 		View decorView = getWindow().getDecorView();
@@ -91,6 +102,19 @@ public class PTAMActivity extends Activity {
 		setContentView(flayout);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
+
+	private boolean CheckCameraPermission(Context context) {
+		// check Android 6 permission
+        int checkCameraPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+		if (checkCameraPermission != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions((Activity) context, PERMISSIONS_CAMERA, REQUEST_PERMISSION_CAMERA);
+			Log.i("PTAM", "CheckCameraPermission: Not Granted");
+			return false;
+		} else {
+			Log.i("PTAM", "CheckCameraPermission: Granted");
+            return true;
+		}
+	} 		
 	
 	@Override
 	public void onResume() {
