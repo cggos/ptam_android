@@ -9,6 +9,6 @@ libs/
 .project 
 .settings/
 
-build.xml
-proguard-project.txt 
-local.properties
+# build.xml
+# proguard-project.txt 
+# local.properties

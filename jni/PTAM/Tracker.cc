@@ -11,6 +11,7 @@
 
 #include <fstream>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <android/log.h>
 
